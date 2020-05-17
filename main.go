@@ -49,6 +49,7 @@ func main() {
 
 	// Setup endpoints
 	r.GET("/datasets", controllers.GetDatasets)
+	r.GET("/datasets/:id", controllers.GetDataset)
 
 	r.Run()
 }

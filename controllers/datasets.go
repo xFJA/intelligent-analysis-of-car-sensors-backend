@@ -8,12 +8,25 @@ import (
 	"github.com/jinzhu/gorm"
 )
 
-// GetDatasets returns all datasets from the database.
+// GetDatasets returns all datasets.
 func GetDatasets(c *gin.Context) {
 	db := c.MustGet("db").(*gorm.DB)
 
 	var datasets []models.Dataset
 	db.Preload("Logs.Records").Find(&datasets)
 
-	c.JSON(http.StatusOK, datasets)
+	c.JSON(http.StatusOK, gin.H{"data": datasets})
+}
+
+// GetDataset returns a single dataset.
+func GetDataset(c *gin.Context) {
+	db := c.MustGet("db").(*gorm.DB)
+
+	var dataset models.Dataset
+	if err := db.Preload("Logs.Records").Where("id = ?", c.Param("id")).First(&dataset).Error; err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Dataset could not be found"})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"data": dataset})
 }
