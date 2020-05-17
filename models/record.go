@@ -1,11 +1,9 @@
 package models
 
-import "github.com/jinzhu/gorm"
-
 // Record represents the entity that store the value of a sensor.
 type Record struct {
-	gorm.Model
-	Value     float64
-	LogID     uint
-	SensorPID string
+	ID        uint    `gorm:"primary_key" json:"id"`
+	Value     float64 `json:"value"`
+	LogID     uint    `json:"-"`
+	SensorPID string  `json:"sensorPID"`
 }

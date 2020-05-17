@@ -1,12 +1,10 @@
 package models
 
-import "github.com/jinzhu/gorm"
-
 // Sensor represents the entity that store the information about a car sensor.
 type Sensor struct {
-	gorm.Model
-	PID         string `gorm:"unique_index"`
-	Description string
-	MeasureUnit string
-	Record      Record `gorm:"foreignkey:SensorPID"`
+	ID          uint   `gorm:"primary_key" json:"id"`
+	PID         string `gorm:"unique_index" json:"pid"`
+	Description string `json:"description"`
+	MeasureUnit string `json:"measureUnit"`
+	Record      Record `gorm:"foreignkey:SensorPID" json:"-"`
 }

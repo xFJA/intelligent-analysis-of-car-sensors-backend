@@ -7,6 +7,7 @@ import (
 	"os"
 	"strconv"
 	"strings"
+	"time"
 
 	"github.com/jinzhu/gorm"
 )
@@ -43,6 +44,12 @@ func (s *CSVStore) Load(path string) error {
 		header[index] = cleanString(value)
 	}
 
+	// Create dataset entity
+	dataset := models.Dataset{
+		Date: time.Now().Unix(),
+		Logs: []models.Log{},
+	}
+
 	for {
 		line, err := data.Read()
 		if err == io.EOF {
@@ -62,8 +69,6 @@ func (s *CSVStore) Load(path string) error {
 			Time:    time,
 			Records: []models.Record{}}
 
-		s.db.Create(&log)
-
 		for index, value := range line[1 : len(line)-1] {
 			// Create record entity
 			parsedValue, err := parseFloat(value)
@@ -79,8 +84,11 @@ func (s *CSVStore) Load(path string) error {
 			log.Records = append(log.Records, record)
 		}
 
-		s.db.Save(&log)
+		dataset.Logs = append(dataset.Logs, log)
 	}
+
+	// Store dataset
+	s.db.Create(&dataset)
 
 	return nil
 }

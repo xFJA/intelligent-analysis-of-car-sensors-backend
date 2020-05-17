@@ -1,6 +1,7 @@
 package main
 
 import (
+	"intelligent-analysis-of-car-sensors-backend/controllers"
 	"intelligent-analysis-of-car-sensors-backend/models"
 	"intelligent-analysis-of-car-sensors-backend/store"
 	"log"
@@ -45,6 +46,9 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
+
+	// Setup endpoints
+	r.GET("/datasets", controllers.GetDatasets)
 
 	r.Run()
 }

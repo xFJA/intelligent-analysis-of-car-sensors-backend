@@ -16,11 +16,14 @@ func SetupModels() (*gorm.DB, error) {
 		return nil, err
 	}
 
-	db.DropTableIfExists(&Log{},
+	db.DropTableIfExists(
+		&Dataset{},
+		&Log{},
 		&Record{},
 		&Sensor{})
 
 	db.AutoMigrate(
+		&Dataset{},
 		&Log{},
 		&Record{},
 		&Sensor{})
