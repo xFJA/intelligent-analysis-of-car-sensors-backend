@@ -1,0 +1,134 @@
+{
+  "sensors": [
+    {
+      "pid": "ENGINE_RPM",
+      "description": "",
+      "measurement_unit": ""
+    },
+    {
+      "pid": "VEHICLE_SPEED",
+      "description": "",
+      "measurement_unit": ""
+    },
+    {
+      "pid": "THROTTLE",
+      "description": "",
+      "measurement_unit": ""
+    },
+    {
+      "pid": "ENGINE_LOAD",
+      "description": "",
+      "measurement_unit": ""
+    },
+    {
+      "pid": "COOLANT_TEMPERATURE",
+      "description": "",
+      "measurement_unit": ""
+    },
+    {
+      "pid": "LONG_TERM_FUEL_TRIM_BANK_1",
+      "description": "",
+      "measurement_unit": ""
+    },
+    {
+      "pid": "SHORT_TERM_FUEL_TRIM_BANK_1",
+      "description": "",
+      "measurement_unit": ""
+    },
+    {
+      "pid": "INTAKE_MANIFOLD_PRESSURE",
+      "description": "",
+      "measurement_unit": ""
+    },
+    {
+      "pid": "FUEL_TANK",
+      "description": "",
+      "measurement_unit": ""
+    },
+    {
+      "pid": "ABSOLUTE_THROTTLE_B",
+      "description": "",
+      "measurement_unit": ""
+    },
+    {
+      "pid": "PEDAL_D",
+      "description": "",
+      "measurement_unit": ""
+    },
+    {
+      "pid": "PEDAL_E",
+      "description": "",
+      "measurement_unit": ""
+    },
+    {
+      "pid": "COMMANDED_THROTTLE_ACTUATOR",
+      "description": "",
+      "measurement_unit": ""
+    },
+    {
+      "pid": "FUEL_AIR_COMMANDED_EQUIV_RATIO",
+      "description": "",
+      "measurement_unit": ""
+    },
+    {
+      "pid": "ABSOLUTE_BAROMETRIC_PRESSURE",
+      "description": "",
+      "measurement_unit": ""
+    },
+    {
+      "pid": "RELATIVE_THROTTLE_POSITION",
+      "description": "",
+      "measurement_unit": ""
+    },
+    {
+      "pid": "INTAKE_AIR_TEMP",
+      "description": "",
+      "measurement_unit": ""
+    },
+    {
+      "pid": "TIMING_ADVANCE",
+      "description": "",
+      "measurement_unit": ""
+    },
+    {
+      "pid": "CATALYST_TEMPERATURE_BANK1_SENSOR1",
+      "description": "",
+      "measurement_unit": ""
+    },
+    {
+      "pid": "CATALYST_TEMPERATURE_BANK1_SENSOR2",
+      "description": "",
+      "measurement_unit": ""
+    },
+    {
+      "pid": "CONTROL_MODULE_VOLTAGE",
+      "description": "",
+      "measurement_unit": ""
+    },
+    {
+      "pid": "COMMANDED_EVAPORATIVE_PURGE",
+      "description": "",
+      "measurement_unit": ""
+    },
+    {
+      "pid": "TIME_RUN_WITH_MIL_ON",
+      "description": "",
+      "measurement_unit": ""
+    },
+    {
+      "pid": "TIME_SINCE_TROUBLE_CODES_CLEARED",
+      "description": "",
+      "measurement_unit": ""
+    },
+    {
+      "pid": "DISTANCE_TRAVELED_WITH_MIL_ON",
+      "description": "",
+      "measurement_unit": ""
+    },
+    {
+      "pid": "WARM_UPS_SINCE_CODES_CLEARED",
+      "description": "",
+      "measurement_unit": ""
+    }
+  ]
+}

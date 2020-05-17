@@ -6,5 +6,5 @@ import "github.com/jinzhu/gorm"
 type Log struct {
 	gorm.Model
 	Time    float64
-	Records []Record
+	Records []Record `gorm:"foreignkey:LogID"`
 }

@@ -1,4 +1,6 @@
 intelligent-analysis-of-car-sensors-backend
+*.csv
+launch.json
 
 # Binaries for programs and plugins
 *.exe
