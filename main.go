@@ -50,6 +50,7 @@ func main() {
 	// Setup endpoints
 	r.GET("/datasets", controllers.GetDatasets)
 	r.GET("/datasets/:id", controllers.GetDataset)
+	r.DELETE("/datasets/:id", controllers.DeleteDataset)
 
 	r.Run()
 }
