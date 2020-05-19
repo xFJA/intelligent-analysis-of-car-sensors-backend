@@ -11,11 +11,11 @@ var dbstring string = "host=localhost user=postgres dbname=postgres sslmode=disa
 // SetupModels create a connection with the database and migrate the models schema.
 func SetupModels() (*gorm.DB, error) {
 	db, err := gorm.Open("postgres", dbstring)
-
 	if err != nil {
 		return nil, err
 	}
 
+	// TODO: remove this piece of code and set seeds properly
 	db.DropTableIfExists(
 		&Dataset{},
 		&Log{},

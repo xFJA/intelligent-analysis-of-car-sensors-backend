@@ -22,22 +22,12 @@ func NewCSVStore(db *gorm.DB) *CSVStore {
 	return &CSVStore{db: db}
 }
 
-// Load reads a csv file and store the data in the database.
-func (s *CSVStore) Load(path string) error {
-	// Open file
-	csvfile, err := os.Open(path)
-	if err != nil {
-		return err
-	}
-	defer csvfile.Close()
-
-	// Parse file
-	data := csv.NewReader(csvfile)
-
+// Load reads a csv reader and store the data in the database.
+func (s *CSVStore) Load(data *csv.Reader) (*models.Dataset, error) {
 	// Store data
 	header, err := data.Read()
 	if err != nil {
-		return err
+		return nil, err
 	}
 
 	for index, value := range header {
@@ -57,13 +47,13 @@ func (s *CSVStore) Load(path string) error {
 		}
 
 		if err != nil {
-			return err
+			return nil, err
 		}
 
 		// Create log
 		time, err := parseFloat(line[0])
 		if err != nil {
-			return err
+			return nil, err
 		}
 		log := models.Log{
 			Time:    time,
@@ -73,7 +63,7 @@ func (s *CSVStore) Load(path string) error {
 			// Create record entity
 			parsedValue, err := parseFloat(value)
 			if err != nil {
-				return err
+				return nil, err
 			}
 			record := models.Record{
 				Value:     parsedValue,
@@ -90,7 +80,7 @@ func (s *CSVStore) Load(path string) error {
 	// Store dataset
 	s.db.Create(&dataset)
 
-	return nil
+	return &dataset, nil
 }
 
 func parseFloat(value string) (float64, error) {
@@ -105,4 +95,21 @@ func cleanString(value string) string {
 	res = strings.TrimSpace(res)
 
 	return res
+}
+
+// LoadFromFile reads a csv file and store the data in the database.
+func (s *CSVStore) LoadFromFile(path string) error {
+	// Open file
+	csvfile, err := os.Open(path)
+	if err != nil {
+		return err
+	}
+	defer csvfile.Close()
+
+	// Parse file
+	data := csv.NewReader(csvfile)
+
+	_, err = s.Load(data)
+
+	return err
 }

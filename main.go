@@ -40,17 +40,15 @@ func main() {
 		})
 	}
 
-	// TODO: load csv from HTTP requests
+	// Setup controllers
 	csvStore := store.NewCSVStore(db)
-	err = csvStore.Load("live1_short.csv")
-	if err != nil {
-		log.Fatal(err)
-	}
+	datasetsController := controllers.NewDatasetsCtrl(csvStore)
 
 	// Setup endpoints
-	r.GET("/datasets", controllers.GetDatasets)
-	r.GET("/datasets/:id", controllers.GetDataset)
-	r.DELETE("/datasets/:id", controllers.DeleteDataset)
+	r.GET("/datasets", datasetsController.GetDatasets)
+	r.POST("/datasets", datasetsController.AddDataset)
+	r.GET("/datasets/:id", datasetsController.GetDataset)
+	r.DELETE("/datasets/:id", datasetsController.DeleteDataset)
 
 	r.Run()
 }
