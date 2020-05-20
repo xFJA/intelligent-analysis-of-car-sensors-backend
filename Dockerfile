@@ -3,7 +3,7 @@ FROM golang:1.14.2-stretch
 ENV PORT=8080
 ENV GO111MODULE=on
 
-WORKDIR /build 
+WORKDIR /app 
 
 # Download dependencies
 COPY go.mod .
@@ -15,9 +15,7 @@ COPY . .
 
 # Create binary
 RUN go build -o main .
-WORKDIR /dist
-RUN cp /build/main .
 
 EXPOSE 8080
 
-CMD ["/dist/main"]
+CMD ["main"]

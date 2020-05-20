@@ -1,0 +1,21 @@
+version: "3"
+
+services:
+  intelligent-analysis-of-car-sensors-backend:
+    image: intelligent-analysis-of-car-sensors-backend
+    build:
+      context: ./
+    container_name: intelligent-analysis-of-car-sensors-backend
+    ports:
+      - "8080:8080"
+    command: bash -c "while !</dev/tcp/db/5432; do sleep 1; done; ./main"
+    links: 
+      - db
+
+  db:
+    image: postgres
+    container_name: intelligent-analysis-of-car-sensors-db 
+    ports: 
+      - "5432:5432"
+    environment: 
+      - POSTGRES_PASSWORD=postgres

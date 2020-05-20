@@ -6,7 +6,7 @@ import (
 )
 
 // TODO: load db string from config file
-var dbstring string = "host=localhost user=postgres dbname=postgres sslmode=disable password=postgres"
+var dbstring string = "host=db user=postgres dbname=postgres sslmode=disable password=postgres"
 
 // SetupModels create a connection with the database and migrate the models schema.
 func SetupModels() (*gorm.DB, error) {
