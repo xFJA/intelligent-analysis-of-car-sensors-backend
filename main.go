@@ -6,11 +6,13 @@ import (
 	"intelligent-analysis-of-car-sensors-backend/store"
 	"log"
 
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 )
 
 func main() {
 	r := gin.Default()
+	r.Use(cors.Default())
 
 	// Setup the database
 	db, err := models.SetupModels()
