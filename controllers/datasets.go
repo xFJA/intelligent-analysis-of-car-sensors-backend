@@ -3,6 +3,7 @@ package controllers
 import (
 	"bufio"
 	"encoding/csv"
+	"fmt"
 	"intelligent-analysis-of-car-sensors-backend/models"
 	"intelligent-analysis-of-car-sensors-backend/store"
 	"net/http"
@@ -36,14 +37,14 @@ func (d *DatasetsCtrl) AddDataset(c *gin.Context) {
 	// Get csv file from POST form
 	csvFile, err := c.FormFile("csv")
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "CSV file could not be found on POST form"})
+		_ = c.AbortWithError(http.StatusBadRequest, fmt.Errorf("CSV file could not be found on POST form :: %w", err))
 		return
 	}
 
 	// Open file
 	src, err := csvFile.Open()
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "CSV file could not be opened"})
+		_ = c.AbortWithError(http.StatusBadRequest, fmt.Errorf("CSV file could not be opened :: %w", err))
 		return
 	}
 
@@ -51,7 +52,7 @@ func (d *DatasetsCtrl) AddDataset(c *gin.Context) {
 	reader := csv.NewReader(bufio.NewReader(src))
 	dataset, err := d.csvStore.Load(reader)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "CSV file could not be stored"})
+		_ = c.AbortWithError(http.StatusBadRequest, fmt.Errorf("CSV file could not be stored :: %w", err))
 		return
 	}
 
@@ -64,7 +65,7 @@ func (d *DatasetsCtrl) GetDataset(c *gin.Context) {
 
 	var dataset models.Dataset
 	if err := db.Preload("Logs.Records").Where("id = ?", c.Param("id")).First(&dataset).Error; err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Dataset could not be found"})
+		_ = c.AbortWithError(http.StatusBadRequest, fmt.Errorf("Dataset could not be found :: %w", err))
 		return
 	}
 
@@ -77,7 +78,7 @@ func (d *DatasetsCtrl) DeleteDataset(c *gin.Context) {
 
 	var dataset models.Dataset
 	if err := db.Where("id = ?", c.Param("id")).First(&dataset).Error; err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Dataset could not be found"})
+		_ = c.AbortWithError(http.StatusBadRequest, fmt.Errorf("Dataset could not be found :: %w", err))
 		return
 	}
 

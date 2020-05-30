@@ -13,6 +13,7 @@ import (
 func main() {
 	r := gin.Default()
 	r.Use(cors.Default())
+	r.Use(ErrorHandler)
 
 	// Setup the database
 	db, err := models.SetupModels()
