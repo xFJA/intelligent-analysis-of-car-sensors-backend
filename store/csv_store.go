@@ -23,7 +23,7 @@ func NewCSVStore(db *gorm.DB) *CSVStore {
 }
 
 // Load reads a csv reader and store the data in the database.
-func (s *CSVStore) Load(data *csv.Reader) (*models.Dataset, error) {
+func (s *CSVStore) Load(data *csv.Reader, name string) (*models.Dataset, error) {
 	// Store data
 	header, err := data.Read()
 	if err != nil {
@@ -35,8 +35,10 @@ func (s *CSVStore) Load(data *csv.Reader) (*models.Dataset, error) {
 	}
 
 	// Create dataset entity
+	name = strings.Replace(name, ".csv", "", 1)
 	dataset := models.Dataset{
 		Date: time.Now().Unix(),
+		Name: name,
 		Logs: []models.Log{},
 	}
 
@@ -109,7 +111,7 @@ func (s *CSVStore) LoadFromFile(path string) error {
 	// Parse file
 	data := csv.NewReader(csvfile)
 
-	_, err = s.Load(data)
+	_, err = s.Load(data, csvfile.Name())
 
 	return err
 }

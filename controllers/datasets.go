@@ -50,7 +50,7 @@ func (d *DatasetsCtrl) AddDataset(c *gin.Context) {
 
 	// Read csv
 	reader := csv.NewReader(bufio.NewReader(src))
-	dataset, err := d.csvStore.Load(reader)
+	dataset, err := d.csvStore.Load(reader, csvFile.Filename)
 	if err != nil {
 		_ = c.AbortWithError(http.StatusBadRequest, fmt.Errorf("CSV file could not be stored :: %w", err))
 		return
