@@ -27,7 +27,7 @@ func (d *DatasetsCtrl) GetDatasets(c *gin.Context) {
 	db := c.MustGet("db").(*gorm.DB)
 
 	var datasets []models.Dataset
-	db.Preload("Logs.Records").Find(&datasets)
+	db.Find(&datasets)
 
 	c.JSON(http.StatusOK, gin.H{"data": datasets})
 }
