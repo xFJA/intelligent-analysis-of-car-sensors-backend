@@ -8,18 +8,15 @@ import (
 	"strconv"
 	"strings"
 	"time"
-
-	"github.com/jinzhu/gorm"
 )
 
 // CSVStore represents the entity that manage all csv operations.
 type CSVStore struct {
-	db *gorm.DB
 }
 
 // NewCSVStore returns a new instance of CSVStore.
-func NewCSVStore(db *gorm.DB) *CSVStore {
-	return &CSVStore{db: db}
+func NewCSVStore() *CSVStore {
+	return &CSVStore{}
 }
 
 // Load reads a csv reader and store the data in the database.
@@ -78,9 +75,6 @@ func (s *CSVStore) Load(data *csv.Reader, name string) (*models.Dataset, error) 
 
 		dataset.Logs = append(dataset.Logs, log)
 	}
-
-	// Store dataset
-	s.db.Create(&dataset)
 
 	return &dataset, nil
 }

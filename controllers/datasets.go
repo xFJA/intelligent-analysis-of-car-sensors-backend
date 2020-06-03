@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"intelligent-analysis-of-car-sensors-backend/models"
 	"intelligent-analysis-of-car-sensors-backend/store"
+	"io/ioutil"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -34,6 +35,8 @@ func (d *DatasetsCtrl) GetDatasets(c *gin.Context) {
 
 // AddDataset creates a new dataset.
 func (d *DatasetsCtrl) AddDataset(c *gin.Context) {
+	db := c.MustGet("db").(*gorm.DB)
+
 	// Get csv file from POST form
 	csvFile, err := c.FormFile("csv")
 	if err != nil {
@@ -55,6 +58,16 @@ func (d *DatasetsCtrl) AddDataset(c *gin.Context) {
 		_ = c.AbortWithError(http.StatusBadRequest, fmt.Errorf("CSV file could not be stored :: %w", err))
 		return
 	}
+
+	// Add csv file to the dataset
+	dataset.CSVFile, err = ioutil.ReadAll(src)
+	if err != nil {
+		_ = c.AbortWithError(http.StatusBadRequest, fmt.Errorf("CSV file  could not be added to dataset entity :: %w", err))
+		return
+	}
+
+	// Store dataset
+	db.Create(&dataset)
 
 	c.JSON(http.StatusOK, gin.H{"data": dataset})
 }

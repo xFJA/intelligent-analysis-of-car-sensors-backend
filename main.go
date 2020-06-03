@@ -44,7 +44,7 @@ func main() {
 	}
 
 	// Setup controllers
-	csvStore := store.NewCSVStore(db)
+	csvStore := store.NewCSVStore()
 	datasetsController := controllers.NewDatasetsCtrl(csvStore)
 
 	// Setup endpoints
