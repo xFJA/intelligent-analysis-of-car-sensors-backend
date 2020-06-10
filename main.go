@@ -28,30 +28,18 @@ func main() {
 		c.Next()
 	})
 
-	// TODO: Investigate official way of setting seeds
-	// TODO: load path from config file
-	// Add seeds for sensors information
-	sensorsInformation, err := store.NewSensorsInformation("store/sensors_information.json")
-	if err != nil {
-		log.Fatal(err)
-	}
-	for _, sensor := range sensorsInformation.SensorList {
-		db.Create(&models.Sensor{
-			PID:         sensor.PID,
-			Description: sensor.Description,
-			MeasureUnit: sensor.MeasureUnit,
-		})
-	}
-
 	// Setup controllers
 	csvStore := store.NewCSVStore()
 	datasetsController := controllers.NewDatasetsCtrl(csvStore)
+	pcaController := controllers.NewPCACtrl()
 
 	// Setup endpoints
 	r.GET("/datasets", datasetsController.GetDatasets)
 	r.POST("/datasets", datasetsController.AddDataset)
 	r.GET("/datasets/:id", datasetsController.GetDataset)
 	r.DELETE("/datasets/:id", datasetsController.DeleteDataset)
+
+	r.GET("/pca/:id", pcaController.PCA)
 
 	r.Run()
 }
