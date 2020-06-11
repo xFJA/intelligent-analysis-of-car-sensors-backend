@@ -13,7 +13,8 @@ type Dataset struct {
 	Name string `json:"name"`
 	Logs []Log  `gorm:"foreignkey:DatasetID" json:"logs"`
 	PCAResult
-	RowsNumber int `json:"rowsNumber"`
+	RowsNumber  int    `json:"rowsNumber"`
+	ColumnNames string `json:"columnNames"`
 }
 
 // PCAResult represents the analysis result from the PCA service.

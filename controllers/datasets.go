@@ -7,6 +7,7 @@ import (
 	"intelligent-analysis-of-car-sensors-backend/models"
 	"intelligent-analysis-of-car-sensors-backend/store"
 	"net/http"
+	"strings"
 
 	"github.com/gin-gonic/gin"
 	"github.com/jinzhu/gorm"
@@ -61,6 +62,7 @@ func (d *DatasetsCtrl) AddDataset(c *gin.Context) {
 	// Store dataset
 	// TODO: check if these values could change
 	dataset.RowsNumber = len(dataset.Logs)
+	dataset.ColumnNames = getColumnNames(dataset)
 	db.Create(&dataset)
 
 	c.JSON(http.StatusOK, gin.H{"data": dataset})
@@ -92,4 +94,17 @@ func (d *DatasetsCtrl) DeleteDataset(c *gin.Context) {
 	db.Delete(&dataset)
 
 	c.JSON(http.StatusOK, gin.H{"data": true})
+}
+
+// getColumnNames returns a list of the column names of the dataset.
+func getColumnNames(dataset *models.Dataset) string {
+	var names string
+
+	// We can get them only checking the first log
+	for _, record := range dataset.Logs[0].Records {
+		names += record.SensorPID + ", "
+	}
+	strings.TrimSuffix(names, ",")
+
+	return names
 }
