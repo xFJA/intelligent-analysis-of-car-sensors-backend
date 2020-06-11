@@ -59,6 +59,8 @@ func (d *DatasetsCtrl) AddDataset(c *gin.Context) {
 	}
 
 	// Store dataset
+	// TODO: check if these values could change
+	dataset.RowsNumber = len(dataset.Logs)
 	db.Create(&dataset)
 
 	c.JSON(http.StatusOK, gin.H{"data": dataset})
