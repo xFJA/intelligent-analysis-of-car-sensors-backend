@@ -38,6 +38,7 @@ func main() {
 	r.POST("/datasets", datasetsController.AddDataset)
 	r.GET("/datasets/:id", datasetsController.GetDataset)
 	r.DELETE("/datasets/:id", datasetsController.DeleteDataset)
+	r.GET("/datasets/:id/csv", datasetsController.GetCSVFile)
 
 	r.GET("/pca/:id", pcaController.PCA)
 

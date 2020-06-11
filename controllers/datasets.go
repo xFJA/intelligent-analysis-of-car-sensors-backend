@@ -6,7 +6,9 @@ import (
 	"fmt"
 	"intelligent-analysis-of-car-sensors-backend/models"
 	"intelligent-analysis-of-car-sensors-backend/store"
+	"io/ioutil"
 	"net/http"
+	"os"
 	"strings"
 
 	"github.com/gin-gonic/gin"
@@ -94,6 +96,35 @@ func (d *DatasetsCtrl) DeleteDataset(c *gin.Context) {
 	db.Delete(&dataset)
 
 	c.JSON(http.StatusOK, gin.H{"data": true})
+}
+
+// GetCSVFile returns a CSV file from the dataset entity.
+func (d *DatasetsCtrl) GetCSVFile(c *gin.Context) {
+	db := c.MustGet("db").(*gorm.DB)
+
+	var dataset models.Dataset
+	if err := db.Preload("Logs.Records").Where("id = ?", c.Param("id")).First(&dataset).Error; err != nil {
+		_ = c.AbortWithError(http.StatusBadRequest, fmt.Errorf("Dataset could not be found :: %w", err))
+		return
+	}
+
+	// Create CSV file
+	csvFilename, err := models.CreateCSVFromDatasetEntity(&dataset)
+	if err != nil {
+		_ = c.AbortWithError(http.StatusBadRequest, fmt.Errorf("CSV file could not be created :: %w", err))
+		return
+	}
+	csvFileContent, err := ioutil.ReadFile(csvFilename)
+	if err != nil {
+		_ = c.AbortWithError(http.StatusBadRequest, fmt.Errorf("CSV file content could not be obtained :: %w", err))
+		return
+	}
+	defer os.Remove(csvFilename)
+
+	c.Header("Content-Description", "File Transfer")
+	c.Header("Content-Disposition", fmt.Sprintf(`attachment; filename="%s"`, csvFilename))
+
+	c.Data(http.StatusOK, "text/csv", csvFileContent)
 }
 
 // getColumnNames returns a list of the column names of the dataset.
