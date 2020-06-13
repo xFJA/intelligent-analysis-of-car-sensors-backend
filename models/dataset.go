@@ -19,10 +19,11 @@ type Dataset struct {
 
 // PCAResult represents the analysis result from the PCA service.
 type PCAResult struct {
-	TwoFirstComponentsPlot    string `json:"twoFirstComponentsPlot"`
-	ComponentsAndFeaturesPlot string `json:"componentsAndFeaturesPlot"`
-	ExplainedVarianceRatio    string `json:"explainedVarianceRatio"`
-	WCSSPlot                  string `json:"wcssPlot"`
+	TwoFirstComponentsPlot               string `json:"twoFirstComponentsPlot"`
+	ComponentsAndFeaturesPlot            string `json:"componentsAndFeaturesPlot"`
+	ExplainedVarianceRatio               string `json:"explainedVarianceRatio"`
+	WCSSPlot                             string `json:"wcssPlot"`
+	CumulativeExplainedVarianceRatioPlot string `json:"cumulativeExplainedVarianceRatioPlot"`
 }
 
 // CreateCSVFromDatasetEntity returns a csv file created from a Dataset entity.
