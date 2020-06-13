@@ -22,6 +22,7 @@ type PCAResult struct {
 	TwoFirstComponentsPlot    string `json:"twoFirstComponentsPlot"`
 	ComponentsAndFeaturesPlot string `json:"componentsAndFeaturesPlot"`
 	ExplainedVarianceRatio    string `json:"explainedVarianceRatio"`
+	WCSSPlot                  string `json:"wcssPlot"`
 }
 
 // CreateCSVFromDatasetEntity returns a csv file created from a Dataset entity.
