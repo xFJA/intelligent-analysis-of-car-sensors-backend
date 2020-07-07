@@ -37,11 +37,7 @@ func (p *PCACtrl) PCA(c *gin.Context) {
 	}
 
 	// Add PCA results to dataset
-	dataset.TwoFirstComponentsPlot = pcaResult.TwoFirstComponentsPlot
-	dataset.ComponentsAndFeaturesPlot = pcaResult.ComponentsAndFeaturesPlot
-	dataset.ExplainedVarianceRatio = pcaResult.ExplainedVarianceRatio
-	dataset.WCSSPlot = pcaResult.WCSSPlot
-	dataset.CumulativeExplainedVarianceRatioPlot = pcaResult.CumulativeExplainedVarianceRatioPlot
+	dataset.PCAResult = *pcaResult
 
 	db.Save(&dataset)
 

@@ -24,6 +24,7 @@ type PCAResult struct {
 	ExplainedVarianceRatio               string `json:"explainedVarianceRatio"`
 	WCSSPlot                             string `json:"wcssPlot"`
 	CumulativeExplainedVarianceRatioPlot string `json:"cumulativeExplainedVarianceRatioPlot"`
+	ClusterList                          string `json:"clusterList"`
 }
 
 // CreateCSVFromDatasetEntity returns a csv file created from a Dataset entity.
