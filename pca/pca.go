@@ -20,7 +20,9 @@ type Client struct {
 
 // ClientRequest stores the entities used in the request.
 type ClientRequest struct {
-	Dataset *models.Dataset
+	Dataset          *models.Dataset
+	ClustersNumber   string
+	ComponentsNumber string
 }
 
 // NewClient returns a new entity of Client.
@@ -32,7 +34,7 @@ func NewClient(baseURL string) *Client {
 
 // PCA performs a POST request to the PCA service sending a CSV file created from the Dataset entity.
 func (c *Client) PCA(clientRequest *ClientRequest) (*models.PCAResult, error) {
-	url := fmt.Sprintf(c.BaseURL + "/pca")
+	url := fmt.Sprintf(c.BaseURL + "/pca?components-number=" + clientRequest.ComponentsNumber + "&clusters-number=" + clientRequest.ClustersNumber)
 
 	// Create CSV file
 	csvFilename, err := models.CreateCSVFromDatasetEntity(clientRequest.Dataset)
