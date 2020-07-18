@@ -49,7 +49,7 @@ func (d *DatasetsCtrl) GetDatasets(c *gin.Context) {
 		DB:      db,
 		Page:    pagingQuery.Page,
 		Limit:   pagingQuery.Limit,
-		OrderBy: []string{"id asc"},
+		OrderBy: []string{"id desc"},
 	}, &datasets)
 
 	var datasetsNumber int
