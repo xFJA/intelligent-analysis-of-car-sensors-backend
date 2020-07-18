@@ -11,6 +11,7 @@ import (
 	"os"
 	"strings"
 
+	"github.com/biezhi/gorm-paginator/pagination"
 	"github.com/gin-gonic/gin"
 	"github.com/jinzhu/gorm"
 )
@@ -25,14 +26,36 @@ func NewDatasetsCtrl(csvStore *store.CSVStore) *DatasetsCtrl {
 	return &DatasetsCtrl{csvStore: csvStore}
 }
 
+// PaginationQuery represents the query to paginate the datasets table.
+type PaginationQuery struct {
+	Page  int `form:"page" json:"page"`
+	Limit int `form:"limit" json:"limit"`
+}
+
 // GetDatasets returns all datasets.
 func (d *DatasetsCtrl) GetDatasets(c *gin.Context) {
 	db := c.MustGet("db").(*gorm.DB)
 
-	var datasets []models.Dataset
-	db.Find(&datasets)
+	var pagingQuery PaginationQuery
+	err := c.Bind(&pagingQuery)
+	if err != nil {
+		_ = c.AbortWithError(http.StatusBadRequest, fmt.Errorf("pagination params could not be obtained :: %w", err))
+		return
+	}
 
-	c.JSON(http.StatusOK, gin.H{"data": datasets})
+	var datasets []models.Dataset
+	db = db.Where("id > ?", 0)
+	pagination.Paging(&pagination.Param{
+		DB:      db,
+		Page:    pagingQuery.Page,
+		Limit:   pagingQuery.Limit,
+		OrderBy: []string{"id asc"},
+	}, &datasets)
+
+	var datasetsNumber int
+	db.Table("datasets").Count(&datasetsNumber)
+
+	c.JSON(http.StatusOK, gin.H{"data": datasets, "datasetsNumber": datasetsNumber})
 }
 
 // AddDataset creates a new dataset.
