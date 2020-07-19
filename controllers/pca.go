@@ -54,6 +54,7 @@ func (p *PCACtrl) PCA(c *gin.Context) {
 
 	// Add PCA results to dataset
 	dataset.PCAResult = *pcaResult
+	dataset.PCAApplied = true
 
 	db.Save(&dataset)
 

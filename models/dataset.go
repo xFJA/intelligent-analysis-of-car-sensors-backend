@@ -15,6 +15,7 @@ type Dataset struct {
 	PCAResult
 	RowsNumber  int    `json:"rowsNumber"`
 	ColumnNames string `json:"columnNames"`
+	PCAApplied  bool   `json:"pcaApplied"`
 }
 
 // PCAResult represents the analysis result from the PCA service.
@@ -24,7 +25,7 @@ type PCAResult struct {
 	ExplainedVarianceRatio               string `json:"explainedVarianceRatio"`
 	WCSSPlot                             string `json:"wcssPlot"`
 	CumulativeExplainedVarianceRatioPlot string `json:"cumulativeExplainedVarianceRatioPlot"`
-	ClusterList                          string `json:"clusterList"`
+	ClusterList                          string `gorm:"DEFAULT:false" json:"clusterList"`
 }
 
 // CreateCSVFromDatasetEntity returns a csv file created from a Dataset entity.
