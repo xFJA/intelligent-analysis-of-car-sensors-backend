@@ -1,4 +1,4 @@
-package pca
+package ai
 
 import (
 	"bytes"
@@ -32,8 +32,15 @@ func NewClient(baseURL string) *Client {
 	}
 }
 
-// PCA performs a POST request to the PCA service sending a CSV file created from the Dataset entity.
-func (c *Client) PCA(clientRequest *ClientRequest) (*models.PCAResult, error) {
+// Result represents the entity that store the results from k-means and SVM.
+type Result struct {
+	models.Kmeans
+	SVMPlot string `json:"svmPlot"`
+}
+
+// Start performs a POST request to ia service sending a CSV file
+// created from the Dataset entity and aplying k-means and SVM to the dataset.
+func (c *Client) Start(clientRequest *ClientRequest) (*Result, error) {
 	url := fmt.Sprintf(c.BaseURL + "/pca?components-number=" + clientRequest.ComponentsNumber + "&clusters-number=" + clientRequest.ClustersNumber)
 
 	// Create CSV file
@@ -81,8 +88,8 @@ func (c *Client) PCA(clientRequest *ClientRequest) (*models.PCAResult, error) {
 	}
 
 	// Get response
-	pcaResult := &models.PCAResult{}
-	err = json.Unmarshal(data, &pcaResult)
+	result := &Result{}
+	err = json.Unmarshal(data, &result)
 	if err != nil {
 		return nil, err
 	}
@@ -93,7 +100,7 @@ func (c *Client) PCA(clientRequest *ClientRequest) (*models.PCAResult, error) {
 		return nil, err
 	}
 
-	return pcaResult, nil
+	return result, nil
 }
 
 func (c *Client) doRequest(req *http.Request) ([]byte, error) {

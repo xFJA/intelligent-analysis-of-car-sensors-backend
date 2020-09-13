@@ -31,7 +31,7 @@ func main() {
 	// Setup controllers
 	csvStore := store.NewCSVStore()
 	datasetsController := controllers.NewDatasetsCtrl(csvStore)
-	pcaController := controllers.NewPCACtrl()
+	aiController := controllers.NewAICtrl()
 
 	// Setup endpoints
 	r.GET("/datasets", datasetsController.GetDatasets)
@@ -40,7 +40,7 @@ func main() {
 	r.DELETE("/datasets/:id", datasetsController.DeleteDataset)
 	r.GET("/datasets/:id/csv", datasetsController.GetCSVFile)
 
-	r.GET("/pca/:id", pcaController.PCA)
+	r.GET("/classify/:id", aiController.Classify)
 
 	r.Run()
 }
