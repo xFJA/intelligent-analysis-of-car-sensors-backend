@@ -2,6 +2,7 @@ package models
 
 import (
 	"encoding/csv"
+	"encoding/json"
 	"fmt"
 	"os"
 )
@@ -28,14 +29,29 @@ func CreateCSVFromDatasetEntity(dataset *Dataset) (string, error) {
 	for _, record := range dataset.Logs[0].Records {
 		headers = append(headers, record.SensorPID)
 	}
+
+	var labelList []int
+	if dataset.KMeansResult.ClusterList != "" {
+		headers = append(headers, "LABEL")
+		err := json.Unmarshal([]byte(dataset.KMeansResult.ClusterList), &labelList)
+		if err != nil {
+			return "", err
+		}
+	}
+
 	csvBuilder = append(csvBuilder, headers)
 
 	// Add each feature value
-	for _, log := range dataset.Logs {
+	for index, log := range dataset.Logs {
 		values := []string{}
 		for _, record := range log.Records {
 			values = append(values, fmt.Sprintf("%f", record.Value))
 		}
+
+		if labelList != nil {
+			values = append(values, fmt.Sprintf("%d", labelList[index]))
+		}
+
 		csvBuilder = append(csvBuilder, values)
 	}
 
