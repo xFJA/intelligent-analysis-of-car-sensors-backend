@@ -2,133 +2,133 @@
   "sensors": [
     {
       "pid": "ENGINE_RPM",
-      "description": "",
-      "measurement_unit": ""
+      "description": "Engine RPM",
+      "measurement_unit": "RPM"
     },
     {
       "pid": "VEHICLE_SPEED",
-      "description": "",
-      "measurement_unit": ""
+      "description": "Vehicle Speed",
+      "measurement_unit": "km/h"
     },
     {
       "pid": "THROTTLE",
-      "description": "",
-      "measurement_unit": ""
+      "description": "Throttle position",
+      "measurement_unit": "%"
     },
     {
       "pid": "ENGINE_LOAD",
-      "description": "",
-      "measurement_unit": ""
+      "description": "Calculated engine load",
+      "measurement_unit": "%"
     },
     {
       "pid": "COOLANT_TEMPERATURE",
-      "description": "",
-      "measurement_unit": ""
+      "description": "Engine coolant temperature derived from an engine coolant temperature sensor or a cylinder head temperature sensor",
+      "measurement_unit": "Cº"
     },
     {
       "pid": "LONG_TERM_FUEL_TRIM_BANK_1",
-      "description": "",
-      "measurement_unit": ""
+      "description": "Long term fuel trim—Bank 1",
+      "measurement_unit": "%"
     },
     {
       "pid": "SHORT_TERM_FUEL_TRIM_BANK_1",
-      "description": "",
-      "measurement_unit": ""
+      "description": "Short term fuel trim—Bank 1",
+      "measurement_unit": "%"
     },
     {
       "pid": "INTAKE_MANIFOLD_PRESSURE",
-      "description": "",
-      "measurement_unit": ""
+      "description": "Intake manifold absolute pressure",
+      "measurement_unit": "kPa"
     },
     {
       "pid": "FUEL_TANK",
-      "description": "",
-      "measurement_unit": ""
+      "description": "Fuel Tank Level Input",
+      "measurement_unit": "% of total capacity"
     },
     {
       "pid": "ABSOLUTE_THROTTLE_B",
-      "description": "",
-      "measurement_unit": ""
+      "description": "Absolute throttle position B",
+      "measurement_unit": "%"
     },
     {
       "pid": "PEDAL_D",
-      "description": "",
-      "measurement_unit": ""
+      "description": "Accelerator pedal position D",
+      "measurement_unit": "%"
     },
     {
       "pid": "PEDAL_E",
-      "description": "",
-      "measurement_unit": ""
+      "description": "Accelerator pedal position E",
+      "measurement_unit": "%"
     },
     {
       "pid": "COMMANDED_THROTTLE_ACTUATOR",
-      "description": "",
-      "measurement_unit": ""
+      "description": "Commanded throttle actuator",
+      "measurement_unit": "%"
     },
     {
       "pid": "FUEL_AIR_COMMANDED_EQUIV_RATIO",
-      "description": "",
-      "measurement_unit": ""
+      "description": "Fuel–Air commanded equivalence ratio",
+      "measurement_unit": "%"
     },
     {
       "pid": "ABSOLUTE_BAROMETRIC_PRESSURE",
-      "description": "",
-      "measurement_unit": ""
+      "description": "Absolute Barometric Pressure",
+      "measurement_unit": "kPa"
     },
     {
       "pid": "RELATIVE_THROTTLE_POSITION",
-      "description": "",
-      "measurement_unit": ""
+      "description": "Relative throttle position",
+      "measurement_unit": "%"
     },
     {
       "pid": "INTAKE_AIR_TEMP",
-      "description": "",
-      "measurement_unit": ""
+      "description": "Intake air temperature",
+      "measurement_unit": "Cº"
     },
     {
       "pid": "TIMING_ADVANCE",
-      "description": "",
+      "description": "Timing advance",
       "measurement_unit": ""
     },
     {
       "pid": "CATALYST_TEMPERATURE_BANK1_SENSOR1",
-      "description": "",
-      "measurement_unit": ""
+      "description": "Catalyst Temperature: Bank 1, Sensor 1",
+      "measurement_unit": "Cº"
     },
     {
       "pid": "CATALYST_TEMPERATURE_BANK1_SENSOR2",
-      "description": "",
-      "measurement_unit": ""
+      "description": "Catalyst Temperature: Bank 1, Sensor 2",
+      "measurement_unit": "Cº"
     },
     {
       "pid": "CONTROL_MODULE_VOLTAGE",
-      "description": "",
-      "measurement_unit": ""
+      "description": "Control module voltage",
+      "measurement_unit": "V"
     },
     {
       "pid": "COMMANDED_EVAPORATIVE_PURGE",
-      "description": "",
-      "measurement_unit": ""
+      "description": "Commanded evaporative purge",
+      "measurement_unit": "%"
     },
     {
       "pid": "TIME_RUN_WITH_MIL_ON",
-      "description": "",
-      "measurement_unit": ""
+      "description": "Time run with MIL on",
+      "measurement_unit": "min"
     },
     {
       "pid": "TIME_SINCE_TROUBLE_CODES_CLEARED",
-      "description": "",
-      "measurement_unit": ""
+      "description": "Time since trouble codes cleared",
+      "measurement_unit": "min"
     },
     {
       "pid": "DISTANCE_TRAVELED_WITH_MIL_ON",
-      "description": "",
-      "measurement_unit": ""
+      "description": "Distance traveled with malfunction indicator lamp (MIL) on",
+      "measurement_unit": "km"
     },
     {
       "pid": "WARM_UPS_SINCE_CODES_CLEARED",
-      "description": "",
-      "measurement_unit": ""
+      "description": "Number of warm-up cycles since all DTCs were cleared via a scan tool",
+      "measurement_unit": "Warm-up cycles"
     }
   ]
 }

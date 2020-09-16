@@ -31,6 +31,7 @@ func main() {
 	// Setup controllers
 	csvStore := store.NewCSVStore()
 	datasetsController := controllers.NewDatasetsCtrl(csvStore)
+	sensorsController := controllers.NewSensorsCtrl()
 	aiController := controllers.NewAICtrl()
 
 	// Setup endpoints
@@ -39,6 +40,8 @@ func main() {
 	r.GET("/datasets/:id", datasetsController.GetDataset)
 	r.DELETE("/datasets/:id", datasetsController.DeleteDataset)
 	r.GET("/datasets/:id/csv", datasetsController.GetCSVFile)
+
+	r.GET("/sensors", sensorsController.GetSensors)
 
 	r.GET("/classify/:id", aiController.Classify)
 	r.POST("/classify-svm", aiController.ClassifySVM)
