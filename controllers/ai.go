@@ -1,10 +1,16 @@
 package controllers
 
 import (
+	"bufio"
+	"encoding/csv"
 	"fmt"
 	"intelligent-analysis-of-car-sensors-backend/ai"
 	"intelligent-analysis-of-car-sensors-backend/models"
+	"io"
+	"io/ioutil"
 	"net/http"
+	"os"
+	"strings"
 
 	"github.com/gin-gonic/gin"
 	"github.com/jinzhu/gorm"
@@ -70,4 +76,98 @@ func (p *AICtrl) Classify(c *gin.Context) {
 	db.Save(&dataset)
 
 	c.JSON(http.StatusOK, dataset)
+}
+
+// ClassifySVM classify a given dataset using the dataset which id is given as training data.
+func (p *AICtrl) ClassifySVM(c *gin.Context) {
+	db := c.MustGet("db").(*gorm.DB)
+
+	dataset := models.Dataset{}
+	db.Preload("Logs.Records").Preload("KMeansResult").First(&dataset, c.PostForm("id"))
+
+	// Get csv file from POST form
+	csvFile, err := c.FormFile("csv")
+	if err != nil {
+		_ = c.AbortWithError(http.StatusBadRequest, fmt.Errorf("CSV file could not be found on POST form :: %w", err))
+		return
+	}
+
+	client := ai.NewClient("http://localhost:5000")
+
+	result, err := client.ClassifySVM(&ai.ClassifySVMRequest{
+		Dataset:           &dataset,
+		DatasetToClassify: csvFile,
+	})
+	if err != nil {
+		_ = c.AbortWithError(http.StatusBadRequest, fmt.Errorf("request  to ai service failed :: %w", err))
+		return
+	}
+	// Parse classification list to string array
+	classificationList := strings.FieldsFunc(result.ClassificationList, split)
+
+	// Add classification list as LABEL column for the dataset given
+	csvBuilder := [][]string{}
+	src, err := csvFile.Open()
+	if err != nil {
+		_ = c.AbortWithError(http.StatusBadRequest, fmt.Errorf("CSV file could not be opened :: %w", err))
+		return
+	}
+
+	reader := csv.NewReader(bufio.NewReader(src))
+	headers, err := reader.Read()
+	if err != nil {
+		_ = c.AbortWithError(http.StatusBadRequest, fmt.Errorf("CSV file could no be readed :: %w", err))
+		return
+	}
+	headers = append(headers, "LABEL (SVM)")
+
+	// Add headers from given dataset
+	csvBuilder = append(csvBuilder, headers)
+
+	i := 0
+	for {
+		line, err := reader.Read()
+		if err == io.EOF {
+			break
+		}
+
+		if err != nil {
+			_ = c.AbortWithError(http.StatusBadRequest, fmt.Errorf("CSV file could no be readed :: %w", err))
+			return
+		}
+
+		line = append(line, classificationList[i])
+
+		csvBuilder = append(csvBuilder, line)
+		i++
+	}
+
+	// Create csv writer
+	fileNameComplete := csvFile.Filename + ".csv"
+	file, err := os.Create(fileNameComplete)
+	if err != nil {
+		_ = c.AbortWithError(http.StatusBadRequest, fmt.Errorf("CSV file could not be created :: %w", err))
+		return
+	}
+	defer file.Close()
+
+	csvWriter := csv.NewWriter(file)
+	csvWriter.WriteAll(csvBuilder)
+	csvWriter.Flush()
+
+	csvFileContent, err := ioutil.ReadFile(fileNameComplete)
+	if err != nil {
+		_ = c.AbortWithError(http.StatusBadRequest, fmt.Errorf("CSV file content could not be obtained :: %w", err))
+		return
+	}
+	defer os.Remove(fileNameComplete)
+
+	c.Header("Content-Description", "File Transfer")
+	c.Header("Content-Disposition", fmt.Sprintf(`attachment; filename="%s"`, fileNameComplete))
+
+	c.Data(http.StatusOK, "text/csv", csvFileContent)
+}
+
+func split(r rune) bool {
+	return r == '[' || r == ']' || r == '"' || r == ','
 }

@@ -11,6 +11,7 @@ import (
 	"net/http"
 	"net/textproto"
 	"os"
+	"strconv"
 )
 
 // Client represents the entity that store the configuration used for the request.
@@ -25,6 +26,13 @@ type ClientRequest struct {
 	ComponentsNumber string
 }
 
+// ClassifySVMRequest stores the entities used in the request
+// for ClassifySVM.
+type ClassifySVMRequest struct {
+	Dataset           *models.Dataset
+	DatasetToClassify *multipart.FileHeader
+}
+
 // NewClient returns a new entity of Client.
 func NewClient(baseURL string) *Client {
 	return &Client{
@@ -36,6 +44,11 @@ func NewClient(baseURL string) *Client {
 type Result struct {
 	models.Kmeans
 	SVMPlot string `json:"svmPlot"`
+}
+
+// ResultSVM represents the entity that store the results from the SVM classification.
+type ResultSVM struct {
+	ClassificationList string `json:"classificationList"`
 }
 
 // Start performs a POST request to ia service sending a CSV file
@@ -89,6 +102,73 @@ func (c *Client) Start(clientRequest *ClientRequest) (*Result, error) {
 
 	// Get response
 	result := &Result{}
+	err = json.Unmarshal(data, &result)
+	if err != nil {
+		return nil, err
+	}
+
+	// Delete csv file
+	err = os.Remove(csvFilename)
+	if err != nil {
+		return nil, err
+	}
+
+	return result, nil
+}
+
+// ClassifySVM performs a POST request to ia service sending a CSV file
+// created from the Dataset entity and the dataset received in the POST request.
+// It applies SMV using the dataset created as training data and the dataset
+// received as data to classify (test).
+func (c *Client) ClassifySVM(clientRequest *ClassifySVMRequest) (*ResultSVM, error) {
+	url := fmt.Sprintf(c.BaseURL + "/svm?dataset-rows-number=" + strconv.Itoa(clientRequest.Dataset.RowsNumber))
+
+	// Create CSV file
+	csvFilename, err := models.CreateCSVFromDatasetEntitySVM(clientRequest.Dataset, clientRequest.DatasetToClassify)
+	if err != nil {
+		return nil, err
+	}
+
+	// Open file
+	mergedCSVFile, err := os.Open(csvFilename)
+	if err != nil {
+		return nil, err
+	}
+
+	// Create form-data
+	body := &bytes.Buffer{}
+	writter := multipart.NewWriter(body)
+	h := make(textproto.MIMEHeader)
+	h.Set("Content-Disposition", fmt.Sprintf(`form-data; name="%s"; filename="%s"`, "csv", mergedCSVFile.Name()))
+	h.Set("Content-Type", "text/csv")
+	part, err := writter.CreatePart(h)
+	if err != nil {
+		return nil, err
+	}
+
+	// TODO: Check first return value from Copy method
+	// Copy CSV file to form-data
+	_, err = io.Copy(part, mergedCSVFile)
+	if err != nil {
+		return nil, err
+	}
+	writter.Close()
+
+	// Create POST request
+	req, err := http.NewRequest("POST", url, body)
+	if err != nil {
+		return nil, err
+	}
+	req.Header.Add("Content-Type", writter.FormDataContentType())
+
+	// Make request
+	data, err := c.doRequest(req)
+	if err != nil {
+		return nil, err
+	}
+
+	// Get response
+	result := &ResultSVM{}
 	err = json.Unmarshal(data, &result)
 	if err != nil {
 		return nil, err

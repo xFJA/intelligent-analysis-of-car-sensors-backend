@@ -41,6 +41,7 @@ func main() {
 	r.GET("/datasets/:id/csv", datasetsController.GetCSVFile)
 
 	r.GET("/classify/:id", aiController.Classify)
+	r.POST("/classify-svm", aiController.ClassifySVM)
 
 	r.Run()
 }
