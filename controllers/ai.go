@@ -80,6 +80,12 @@ func (p *AICtrl) Classify(c *gin.Context) {
 	dataset.SVMResult = svm
 	db.Save(&dataset)
 
+	// Return full dataset
+	if err := db.Preload("Logs.Records").Preload("KMeansResult").Preload("SVMResult").Preload("Prediction").Where("id = ?", c.Param("id")).First(&dataset).Error; err != nil {
+		_ = c.AbortWithError(http.StatusBadRequest, fmt.Errorf("Dataset could not be found :: %w", err))
+		return
+	}
+
 	c.JSON(http.StatusOK, dataset)
 }
 
@@ -207,6 +213,12 @@ func (p *AICtrl) Predict(c *gin.Context) {
 	}
 	dataset.PredictionApplied = true
 	db.Save(&dataset)
+
+	// Return full dataset
+	if err := db.Preload("Logs.Records").Preload("KMeansResult").Preload("SVMResult").Preload("Prediction").Where("id = ?", c.Param("id")).First(&dataset).Error; err != nil {
+		_ = c.AbortWithError(http.StatusBadRequest, fmt.Errorf("Dataset could not be found :: %w", err))
+		return
+	}
 
 	c.JSON(http.StatusOK, dataset)
 }
