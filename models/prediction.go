@@ -8,4 +8,5 @@ type Prediction struct {
 	Time              string `json:"time"`
 	RMSE              string `json:"rmse"`
 	Feature           string `json:"feature"`
+	Epochs            int    `json:"epochs"`
 }

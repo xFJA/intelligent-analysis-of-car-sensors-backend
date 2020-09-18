@@ -34,6 +34,7 @@ type Request struct {
 // PredictionRequest is the entity that store the parameters used in the prediction.
 type PredictionRequest struct {
 	Feature string `form:"feature"`
+	Epochs  int    `form:"epochs"`
 }
 
 // Classify process a dataset applying principal components analysis and store the results.
@@ -198,6 +199,7 @@ func (p *AICtrl) Predict(c *gin.Context) {
 	result, err := client.Prediction(&ai.PredictionRequest{
 		Dataset: &dataset,
 		Feature: request.Feature,
+		Epochs:  request.Epochs,
 	})
 	if err != nil {
 		_ = c.AbortWithError(http.StatusBadRequest, fmt.Errorf("request  to ai service failed :: %w", err))
@@ -210,6 +212,7 @@ func (p *AICtrl) Predict(c *gin.Context) {
 		RMSE:              result.RMSE,
 		Time:              result.Time,
 		Feature:           request.Feature,
+		Epochs:            request.Epochs,
 	}
 	dataset.PredictionApplied = true
 	db.Save(&dataset)
