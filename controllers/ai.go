@@ -205,6 +205,7 @@ func (p *AICtrl) Predict(c *gin.Context) {
 		Time:              result.Time,
 		Feature:           request.Feature,
 	}
+	dataset.PredictionApplied = true
 	db.Save(&dataset)
 
 	c.JSON(http.StatusOK, dataset)

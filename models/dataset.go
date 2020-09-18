@@ -24,6 +24,7 @@ type Dataset struct {
 	KMeansResult          Kmeans     `gorm:"foreignkey:id" json:"kmeansResult"`
 	SVMResult             SVM        `gorm:"foreignkey:id" json:"svmResult"`
 	Prediction            Prediction `gorm:"foreignkey:id" json:"prediction"`
+	PredictionApplied     bool       `json:"predictionApplied"`
 }
 
 // CreateCSVFromDatasetEntity returns a csv file created from a Dataset entity.
