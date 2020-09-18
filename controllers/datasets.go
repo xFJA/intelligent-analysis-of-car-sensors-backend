@@ -98,7 +98,7 @@ func (d *DatasetsCtrl) GetDataset(c *gin.Context) {
 	db := c.MustGet("db").(*gorm.DB)
 
 	var dataset models.Dataset
-	if err := db.Preload("Logs.Records").Preload("KMeansResult").Preload("SVMResult").Where("id = ?", c.Param("id")).First(&dataset).Error; err != nil {
+	if err := db.Preload("Logs.Records").Preload("KMeansResult").Preload("SVMResult").Preload("Prediction").Where("id = ?", c.Param("id")).First(&dataset).Error; err != nil {
 		_ = c.AbortWithError(http.StatusBadRequest, fmt.Errorf("Dataset could not be found :: %w", err))
 		return
 	}

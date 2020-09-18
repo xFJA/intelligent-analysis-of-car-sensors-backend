@@ -31,6 +31,11 @@ type Request struct {
 	ComponentsNumber string `form:"components-number"`
 }
 
+// PredictionRequest is the entity that store the parameters used in the prediction.
+type PredictionRequest struct {
+	Feature string `form:"feature"`
+}
+
 // Classify process a dataset applying principal components analysis and store the results.
 func (p *AICtrl) Classify(c *gin.Context) {
 	db := c.MustGet("db").(*gorm.DB)
@@ -166,6 +171,43 @@ func (p *AICtrl) ClassifySVM(c *gin.Context) {
 	c.Header("Content-Disposition", fmt.Sprintf(`attachment; filename="%s"`, fileNameComplete))
 
 	c.Data(http.StatusOK, "text/csv", csvFileContent)
+}
+
+// Predict apply predictions using LSTM neuronal networks over a dataset.
+func (p *AICtrl) Predict(c *gin.Context) {
+	db := c.MustGet("db").(*gorm.DB)
+
+	dataset := models.Dataset{}
+	db.Preload("Logs.Records").First(&dataset, c.Param("id"))
+
+	var request PredictionRequest
+	err := c.Bind(&request)
+	if err != nil {
+		_ = c.AbortWithError(http.StatusBadRequest, fmt.Errorf("request could no be binded :: %w", err))
+		return
+	}
+
+	client := ai.NewClient("http://localhost:5000")
+
+	result, err := client.Prediction(&ai.PredictionRequest{
+		Dataset: &dataset,
+		Feature: request.Feature,
+	})
+	if err != nil {
+		_ = c.AbortWithError(http.StatusBadRequest, fmt.Errorf("request  to ai service failed :: %w", err))
+		return
+	}
+
+	dataset.Prediction = models.Prediction{
+		LearningCurvePlot: result.LearningCurvePlot,
+		PredictionPlot:    result.PredictionPlot,
+		RMSE:              result.RMSE,
+		Time:              result.Time,
+		Feature:           request.Feature,
+	}
+	db.Save(&dataset)
+
+	c.JSON(http.StatusOK, dataset)
 }
 
 func split(r rune) bool {

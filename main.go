@@ -46,5 +46,7 @@ func main() {
 	r.GET("/classify/:id", aiController.Classify)
 	r.POST("/classify-svm", aiController.ClassifySVM)
 
+	r.GET("predict/:id", aiController.Predict)
+
 	r.Run()
 }

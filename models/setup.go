@@ -24,7 +24,8 @@ func SetupModels() (*gorm.DB, error) {
 		&Record{},
 		&Sensor{},
 		&Kmeans{},
-		&SVM{})
+		&SVM{},
+		&Prediction{})
 
 	// TODO: Investigate official way of setting seeds
 	// TODO: load path from config file

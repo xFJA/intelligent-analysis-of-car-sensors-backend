@@ -14,15 +14,16 @@ import (
 
 // Dataset represents the entity that store all datasets.
 type Dataset struct {
-	ID                    uint   `gorm:"primary_key" json:"id"`
-	Date                  int64  `json:"date"`
-	Name                  string `json:"name"`
-	Logs                  []Log  `gorm:"foreignkey:DatasetID" json:"logs"`
-	RowsNumber            int    `json:"rowsNumber"`
-	ColumnNames           string `json:"columnNames"`
-	ClassificationApplied bool   `json:"classificationApplied"`
-	KMeansResult          Kmeans `gorm:"foreignkey:id" json:"kmeansResult"`
-	SVMResult             SVM    `gorm:"foreignkey:id" json:"svmResult"`
+	ID                    uint       `gorm:"primary_key" json:"id"`
+	Date                  int64      `json:"date"`
+	Name                  string     `json:"name"`
+	Logs                  []Log      `gorm:"foreignkey:DatasetID" json:"logs"`
+	RowsNumber            int        `json:"rowsNumber"`
+	ColumnNames           string     `json:"columnNames"`
+	ClassificationApplied bool       `json:"classificationApplied"`
+	KMeansResult          Kmeans     `gorm:"foreignkey:id" json:"kmeansResult"`
+	SVMResult             SVM        `gorm:"foreignkey:id" json:"svmResult"`
+	Prediction            Prediction `gorm:"foreignkey:id" json:"prediction"`
 }
 
 // CreateCSVFromDatasetEntity returns a csv file created from a Dataset entity.
