@@ -35,9 +35,10 @@ type ClassifySVMRequest struct {
 
 // PredictionRequest stores the entities used in the LSTM request.
 type PredictionRequest struct {
-	Dataset *models.Dataset
-	Feature string
-	Epochs  int
+	Dataset                *models.Dataset
+	Feature                string
+	Epochs                 int
+	PredictionsFeatureType string
 }
 
 // NewClient returns a new entity of Client.
@@ -197,7 +198,7 @@ func (c *Client) ClassifySVM(clientRequest *ClassifySVMRequest) (*ResultSVM, err
 
 // Prediction performs a predictions over the LSTM neural network.
 func (c *Client) Prediction(clientRequest *PredictionRequest) (*ResultPrediction, error) {
-	url := fmt.Sprintf(c.BaseURL + "/predict?feature=" + clientRequest.Feature + "&epochs=" + strconv.Itoa(clientRequest.Epochs))
+	url := fmt.Sprintf(c.BaseURL + "/predict?feature=" + clientRequest.Feature + "&epochs=" + strconv.Itoa(clientRequest.Epochs) + "&predictions-feature-type=" + clientRequest.PredictionsFeatureType)
 
 	// Create CSV file
 	csvFilename, err := models.CreateCSVFromDatasetEntity(clientRequest.Dataset)
