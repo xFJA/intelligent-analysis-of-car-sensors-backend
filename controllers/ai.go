@@ -33,9 +33,10 @@ type Request struct {
 
 // PredictionRequest is the entity that store the parameters used in the prediction.
 type PredictionRequest struct {
-	Feature                string `form:"feature"`
-	Epochs                 int    `form:"epochs"`
-	PredictionsFeatureType string `form:"predictions-feature-type"`
+	Feature                   string `form:"feature"`
+	Epochs                    int    `form:"epochs"`
+	PredictionsFeatureType    string `form:"predictions-feature-type"`
+	PrincipalComponentsNumber int    `form:"pc-number"`
 }
 
 // Classify process a dataset applying principal components analysis and store the results.
@@ -198,10 +199,11 @@ func (p *AICtrl) Predict(c *gin.Context) {
 	client := ai.NewClient("http://localhost:5000")
 
 	result, err := client.Prediction(&ai.PredictionRequest{
-		Dataset:                &dataset,
-		Feature:                request.Feature,
-		Epochs:                 request.Epochs,
-		PredictionsFeatureType: request.PredictionsFeatureType,
+		Dataset:                   &dataset,
+		Feature:                   request.Feature,
+		Epochs:                    request.Epochs,
+		PredictionsFeatureType:    request.PredictionsFeatureType,
+		PrincipalComponentsNumber: request.PrincipalComponentsNumber,
 	})
 	if err != nil {
 		_ = c.AbortWithError(http.StatusBadRequest, fmt.Errorf("request  to ai service failed :: %w", err))
@@ -209,13 +211,14 @@ func (p *AICtrl) Predict(c *gin.Context) {
 	}
 
 	dataset.Prediction = models.Prediction{
-		LearningCurvePlot:      result.LearningCurvePlot,
-		PredictionPlot:         result.PredictionPlot,
-		RMSE:                   result.RMSE,
-		Time:                   result.Time,
-		Feature:                request.Feature,
-		Epochs:                 request.Epochs,
-		PredictionFeaturesType: request.PredictionsFeatureType,
+		LearningCurvePlot:         result.LearningCurvePlot,
+		PredictionPlot:            result.PredictionPlot,
+		RMSE:                      result.RMSE,
+		Time:                      result.Time,
+		Feature:                   request.Feature,
+		Epochs:                    request.Epochs,
+		PredictionFeaturesType:    request.PredictionsFeatureType,
+		PrincipalComponentsNumber: request.PrincipalComponentsNumber,
 	}
 	dataset.PredictionApplied = true
 	db.Save(&dataset)
